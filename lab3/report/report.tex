@@ -1,0 +1,152 @@
+\documentclass[11pt]{article}
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{center}
+\ \vspace{-3cm}
+
+\includegraphics[width=0.5\textwidth]{msu.png}\\
+{\scshape Московский государственный университет имени М.~В.~Ломоносова}\\
+Факультет вычислительной математики и кибернетики\\
+Кафедра системного анализа
+
+\vfill
+
+{\LARGE Отчёт по практическому заданию}
+
+\vspace{1cm}
+
+{\Huge\bfseries <<Аппроксимация преобразования фурье с помощью БПФ в Matlab>>}
+\end{center}
+
+\vspace{1cm}
+
+\begin{flushright}
+  \large
+  \textit{Студент 315 группы}\\
+  Е.\,В.~Гуров
+
+  \vspace{5mm}
+
+  \textit{Руководитель практикума}\\
+  к.ф.-м.н., доцент П.\,А.~Точилин
+\end{flushright}
+
+\vfill
+
+\begin{center}
+Москва, 2020
+\end{center}
+\newpage
+
+\section{Постановка задачи}
+
+С помощью Быстрого Преобразования Фурье (БПФ) получить апппроксимацию для преобразования фурье \(F(\lambda)\) следующих функций:~1) \( \frac{1 - cos^2(t)}{t} \), ~ 2) \( te^{-2t^2}\), ~ 3) \( \frac{2}{1 + 3t^6} \), ~ 4)\( e^{-5|t|}ln(3+t^4) \). Построить графики для действительной и мнимой частей получившейся аппроксимации, а так же рассчитать аналитически преобразования фурье для первых двух функций, и сравнить их с результатом работы БПФ(fft).
+
+\section{Теоретическая часть}
+\subsection{Изложение алгоритма работы программы}
+Пусть $f(t)$ - исходная функция.\\
+1) Ограничим область определения функции \(f(t)\) отрезком \([a,b]\)(рассмотрим произведение исходного сигнала на оконную функцию)
+\[ h_{[a,b]}(t) =
+  \begin{cases}
+    1 & ,t \in [a,b]\\
+    0 & ,t \notin [a,b]\\
+  \end{cases}
+\]
+2)Далее производим пересчет шага дискретизации исходной функции:\\
+\[ n = floor(T / step) + 1; \] 
+\[ step = T / (n - 1); \]
+Здесь \(T = T_{[a,b]}\) - окно входного сигнала соответствующее отрезку \([a,b]\) , step - шаг дискретизации, n - число отсчетов за время \(T\), \(floor\) - встроенная matlab-функция предназначенная для получения целой части числа.\\
+3) Продлим функцию \(f\) по периоду \(T_{[a,b]}\). C помощью циклического сдвига массива значений исходной функции \(f\) получим сеточную функцию \(f(k \cdot  step) , k = 1, \dots, n\) на отрезке \([0, T_{[a,b]}]\). Этот массив подается на вход встроенной matlab-функции fft. На выходе имеем массив занчений апроксимации преобразования фурье для исходного сигнала. Построим его график с шагом дискретизации \( step_{F(\lambda)} = \frac{2 \pi}{T_[a,b]}\) и продлим по периоду \(T_{F(\lambda)} = n * step_{F(\lambda)}\), чтобы  изобразить на отрезке \([c,d]\) заданном в параметре выходного окна. 
+\subsection{Получение аналитического выражения для преобразования фурье первых двух функций}
+\bigskip
+1. ~ \( f(t) =  \frac{1 - cos^2(t)}{t}\) \bigskip \\ 
+\(f(t)\) - нечетная функция \(\implies Re \: F(\lambda) = 0\). Тогда с учетом \( e^{-i \lambda t} = cos(\lambda t) + i sin(\lambda t)\) получаем:\\
+\( Im \: F(\lambda) = \int\limits_{-\infty}^{+\infty} \frac{1-cos^2(t)}{t} (-i sin(\lambda t)) \, \mathrm{d}t = -i \int\limits_{-\infty}^{+\infty} \frac{1 - cos^2(t)}{t} sin(\lambda t) \, \mathrm{d}t = -i \int\limits_{-\infty}^{+\infty} \frac{sin^2(t)}{t} sin(\lambda t) \, \mathrm{d}t =\\
+= -i \int\limits_{-\infty}^{+\infty} sin(t) \frac{sin(t) \cdot sin(\lambda t)}{t} \, \mathrm{d}t = -i \int\limits_{-\infty}^{+\infty} sin(t) \frac{cos(t - \lambda t) - cos(t + \lambda t)}{2t} \, \mathrm{d}t =\\
+= -\frac{i}{2} \int\limits_{-\infty}^{+\infty}  \frac{sin(t) cos[(1-\lambda)t] - sin(t) cos[(1+\lambda)t]}{t} \, \mathrm{d}t = -\frac{i}{2} \int\limits_{-\infty}^{+\infty}\frac{sin[(2-\lambda)t] + sin(\lambda t) - sin[(2+\lambda) t] - sin(-\lambda t)}{2t} \, \mathrm{d}t  =\\
+= -\frac{i}{4} \int\limits_{-\infty}^{+\infty} \frac{sin[(2-\lambda)t] + 2sin(\lambda t) - sin[(2+\lambda)t]}{t} \, \mathrm{d}t = -\frac{i}{2} \int\limits_{0}^{+\infty} \frac{sin[(2-\lambda)t] + 2sin(\lambda t) - sin[(2+\lambda)t]}{t} \, \mathrm{d}t =\\ 
+\bigskip 
+= \Big\{\int\limits_{0}^{+\infty} \frac{sin(at)}{t} \, \mathrm{d}t = \frac{\pi}{2} sgn(a) \) - интеграл Дирихле\(\Big\} = \frac{i \pi}{4} \Big[ sgn(\lambda - 2) - 2sgn(\lambda) + sgn(\lambda + 2)\Big] \) \\
+\bigskip
+2. ~ \(f(t) = te^{-2t^2}\) \\
+\(f(t)\) - нечетная функция \(\implies Re \: F(\lambda) = 0\). Аналогично имеем:\\
+\(Im \: F(\lambda) = \int\limits_{-\infty}^{+\infty} te^{-2t^2} \big(-i sin(\lambda t)\big) \, \mathrm{d}t = -i \int\limits_{-\infty}^{+\infty} te^{-2t^2} sin(\lambda t) \, \mathrm{d}t = \frac{i}{4} \int\limits_{-\infty}^{+\infty} sin(\lambda t) \, \mathrm{d}(e^{-2t^2}) =\\
+= \frac{i}{4}\big[ sin(\lambda t) e^{-2t^2}\big|_{-\infty}^{+\infty} - \lambda \int\limits_{-\infty}^{+\infty} cos(\lambda t) e^{-2t^2} \, \mathrm{d}t \big] = -\frac{i \lambda}{4} \int\limits_{-\infty}^{+\infty} cos(\lambda t) e^{-2t^2} \, \mathrm{d}t\) \bigskip \\
+Найдем значение последнего интеграла как функции от \(\lambda: \bigskip \\
+\int\limits_{-\infty}^{+\infty}cos(\lambda t) e^{-2t^2} \, \mathrm{d}t = \int\limits_{-\infty}^{+\infty} Re \: (e^{-2t^2} \cdot e^{i \lambda t}) \, \mathrm{d}t = Re \int\limits_{-\infty}^{+\infty} e^{-2t^2} \cdot e^{i \lambda t} \, \mathrm{d}t = Re \int\limits_{-\infty}^{+\infty} e^{-2t^2 + i \lambda t} \, \mathrm{d}t = \\ 
+= Re \int\limits_{-\infty}^{+\infty} e^{-(\sqrt{2} t - \frac{i \lambda}{2\sqrt{2}})^2 - \frac{\lambda^2}{8}} \, \mathrm{d}t = Re \: \Big( e^{-\frac{\lambda^2}{8}} \int\limits_{-\infty}^{+\infty} e^{-(\sqrt{2} t - \frac{i \lambda}{2\sqrt{2}})^2} \mathrm{d}t \Big) = \\
+= Re \: \Big[ e^{-\frac{\lambda^2}{8}} \cdot \frac{1}{\sqrt{2}} \int\limits_{-\infty}^{+\infty} e^{-(\sqrt{2} t - \frac{i \lambda}{2\sqrt{2}})^2} \mathrm{d}(\sqrt{2} t - \frac{i \lambda}{2\sqrt{2}})\Big] = \Big\{ \int\limits_{-\infty}^{+\infty} e^{-t^2} \mathrm{d}t = \sqrt{\pi} \) - интеграл Пуассона\(\Big\} = \sqrt{\frac{\pi}{2}} e^{-\frac{\lambda^2}{8}}\) \bigskip \\
+В итоге получим: \(F(\lambda) = -\frac{i \lambda}{4} \sqrt{\frac{\pi}{2}} e^{-\frac{\lambda^2}{8}}\)
+
+\section{Графики преобразований фурье данных функций при разных значениях параметров}
+Напомним данные функции:~1) \( \frac{1 - cos^2(t)}{t} \), ~ 2) \( te^{-2t^2}\), ~ 3) \( \frac{2}{1 + 3t^6} \), ~ 4) \( e^{-5|t|}ln(3+t^4) \). \bigskip \\
+Далее на графиках синим цветом изображен результат работы функции fft, красным - аналитически посчитанное преобразование фурье, а зеленым - сумма аналитеских \(F(\lambda)\), изображенных с соответствующими сдвигами. \bigskip \\
+\newpage
+\begin{itemize}
+	\item \textbf{Эффект наложения спектра} \\
+	\begin{itemize}
+		\item \textbf{Функция №2.} Входное окно: \textbf{[-100, 100]}, Шаг дискретизации: \textbf{0.1} \medskip \\
+			Видно, что сумма аналитических значений преобразований фурье, изображенных с определенными сдвигами отличается от реального преобразования фурье в местах наложения.\bigskip \\
+			\includegraphics[width=0.8\textwidth]{aliasing_re.png}\\
+			\includegraphics[width=0.8\textwidth]{aliasing.png}\\
+		\item \textbf{Функция №2.} Входное окно: \textbf{[-100, 100]}, Шаг дискретизации: \textbf{0.06} \medskip \\
+			При уменьшении шага дискретизации эффект пропадает практически полностью. \bigskip \\
+			\includegraphics[width=0.8\textwidth]{no_aliasing_re.png}\\
+			\includegraphics[width=0.8\textwidth]{no_aliasing.png}\\
+	\end{itemize} 
+	\newpage
+	\item \textbf{Графики каждого преобразования Фурье при разных параметрах}
+	\begin{itemize}
+		\item \textbf{Функция №1}
+			\begin{itemize}	
+				\item Входное окно: \textbf{[1, 100]}, Шаг дискретизации: \textbf{0.1} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func1_1_100_0.1_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func1_1_100_0.1_im.png}\\
+				\item Входное окно: \textbf{[0.001, 100]}, Шаг дискретизации: \textbf{0.01} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func1_0.001_100_0.01_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func1_0.001_100_0.01_im.png}\\
+			\end{itemize}
+		\item \textbf{Функция №2}	
+			\begin{itemize}
+				\item Входное окно: \textbf{[-100, 100]}, Шаг дискретизации: \textbf{0.1} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func2_-100_100_0.1_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func2_-100_100_0.1_im.png}\\
+				\item Входное окно: \textbf{[0.001, 100]}, Шаг дискретизации: \textbf{0.01} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func2_-20_20_0.1_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func2_-20_20_0.1_im.png}\\
+			\end{itemize}
+		\item \textbf{Функция №3}
+			\begin{itemize}	
+				\item Входное окно: \textbf{[-10, 10]}, Шаг дискретизации: \textbf{0.1} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func3_-10_10_0.1_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func3_-10_10_0.1_im.png}\\
+				\item Входное окно: \textbf{[-10, 10]}, Шаг дискретизации: \textbf{0.05} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func3_-10_10_0.05_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func3_-10_10_0.05_im.png}\\
+					\newpage
+				\item Входное окно: \textbf{[-10, 10]}, Шаг дискретизации: \textbf{0.01} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func3_-10_10_0.01_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func3_-10_10_0.01_im.png}\\
+			\end{itemize}
+		\item \textbf{Функция №4}	
+			\begin{itemize}
+				\item Входное окно: \textbf{[-100, 100]}, Шаг дискретизации: \textbf{0.5} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func4_-100_100_0.5_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func4_-100_100_0.5_im.png}\\
+				\item Входное окно: \textbf{[-10, 10]}, Шаг дискретизации: \textbf{0.1} \medskip \\
+					\includegraphics[width=0.7\textwidth]{func4_-10_10_0.1_re.png}\\
+					\includegraphics[width=0.7\textwidth]{func4_-10_10_0.1_im.png}\\
+			\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\end{document}
+
