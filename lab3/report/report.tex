@@ -103,6 +103,18 @@
 			\includegraphics[width=0.8\textwidth]{no_aliasing.png}\\
 	\end{itemize} 
 	\newpage
+	\item \textbf{Эффект ряби} \\
+	\begin{itemize}
+		\item \textbf{Функция №2.} Входное окно: \textbf{[-0.7, 20]}, Шаг дискретизации: \textbf{0.05} \medskip \\
+			В случае если окно обрезает функцию в точках, где она значительно отличается от нуля, на вход fft подается ``сильно'' разрывная функция. Из за чего возникает эффект Гиббса(ряби).\bigskip \\
+			\includegraphics[width=0.8\textwidth]{ripple_effect_0.05_re}\\
+			\includegraphics[width=0.8\textwidth]{ripple_effect_0.05_im}\\
+		\item \textbf{Функция №2.} Входное окно: \textbf{[-0.7, 20]}, Шаг дискретизации: \textbf{0.001} \medskip \\
+			При уменьшении шага дискретизации эффект ряби не исчезает. С помощью изменения частоты измерений ээфект ряби устранить принципиально нельзя. \bigskip \\
+			\includegraphics[width=0.8\textwidth]{ripple_effect_0.001_re}\\
+			\includegraphics[width=0.8\textwidth]{ripple_effect_0.001_im}\\
+	\end{itemize} 
+	\newpage
 	\item \textbf{Графики каждого преобразования Фурье при разных параметрах}
 	\begin{itemize}
 		\item \textbf{Функция №1}
