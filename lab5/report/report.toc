@@ -1,0 +1,15 @@
+\babel@toc {russian}{}
+\contentsline {section}{Постановка задачи}{3}{section*.2}%
+\contentsline {section}{Теоретическая часть}{3}{section*.3}%
+\contentsline {subsection}{Принцип максимума Понтрягина}{3}{section*.4}%
+\contentsline {subsection}{Вычисление опроных функций для множества начальных состояний, целевого множества и множества допустимых управлений}{4}{section*.5}%
+\contentsline {subsection}{Описание алгоритма работы программы}{5}{section*.6}%
+\contentsline {subsection}{Комментарий к численному методу}{5}{section*.7}%
+\contentsline {subsection}{Погрешность условия трансверсальности}{6}{section*.8}%
+\contentsline {subsection}{Параметры численного метода}{6}{section*.9}%
+\contentsline {section}{Примеры работы программы для разных параметров задачи.}{7}{section*.10}%
+\contentsline {subsection}{Пример 1}{7}{section*.11}%
+\contentsline {subsection}{Пример 2}{8}{section*.13}%
+\contentsline {subsection}{Пример 3(иллюстрация разрывности времени оптимального быстродействия)}{9}{section*.15}%
+\contentsline {subsection}{Пример 4(демонстрация улучшения результата, посредством изменения параметров численного метода)}{10}{section*.17}%
+\contentsline {section}{Список литературы}{11}{section*.19}%
