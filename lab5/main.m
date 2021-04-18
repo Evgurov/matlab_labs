@@ -43,34 +43,22 @@ if Tmin ~= Tmax
     hold off;
     
     figure('Name','U(t)','NumberTitle','off');
-    subplot(2, 1, 1);
-    plot (T, U(1,:), 'b');
-    xlabel('t');
-    ylabel('u1(t)')
-    subplot(2, 1, 2);
-    plot(T, U(2,:), 'b');
-    xlabel('t');
-    ylabel('u2(t)')
+    plot (T, U(1,:));
+    hold on;
+    plot(T, U(2,:));
+    legend('u1(t)', 'u2(t)');
     
     figure('Name','Psi(t)','NumberTitle','off');
-    subplot(2, 1, 1);
-    plot (T, Psi(1,:), 'b');
-    xlabel('t');
-    ylabel('Psi1(t)')
-    subplot(2, 1, 2);
-    plot(T, Psi(2,:), 'b');
-    xlabel('t');
-    ylabel('Psi2(t)')
+    plot (T, Psi(1,:));
+    hold on;
+    plot(T, Psi(2,:));
+    legend('psi1(t)', 'psi2(t)');
     
     figure('Name','X(t)','NumberTitle','off');
-    subplot(2, 1, 1);
-    plot (T, X(:,1), 'b');
-    xlabel('t');
-    ylabel('X1(t)')
-    subplot(2, 1, 2);
-    plot(T, X(:,2), 'b');
-    xlabel('t');
-    ylabel('X2(t)')
+    plot (T, X(:,1));
+    hold on;
+    plot(T, X(:,2));
+    legend('x1(t)', 'x2(t)');
     
     TransversalityMist = abs(fun(x1, r1, Q, p, X(size(X, 1), :), -Psi(:, size(Psi, 2))));
     
